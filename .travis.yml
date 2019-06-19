@@ -1,0 +1,17 @@
+language: php
+
+php:
+  - '7.1'
+  
+services:
+  - postgresql
+
+before_script:
+  - composer self-update
+  - composer install --no-interaction
+  - psql -c 'create database jobboard;' -U postgres
+script:
+  - mkdir -p tests/logs
+  - vendor/bin/phpunit --coverage-clover ./tests/logs/clover.xml
+after_script:
+  - travis_retry php vendor/bin/php-coveralls -v
