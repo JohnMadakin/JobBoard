@@ -1,5 +1,6 @@
 <?php
-
+use Illuminate\Hashing\BcryptHasher;
+use App\Models\User;
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -11,9 +12,10 @@
 |
 */
 
-$factory->define(App\User::class, function (Faker\Generator $faker) {
+$factory->define(User::class, function (Faker\Generator $faker) {
+    $bcrypt = new BcryptHasher();
     return [
-        'name' => $faker->name,
         'email' => $faker->email,
+        'password' => $bcrypt->make('12345678'),
     ];
 });
