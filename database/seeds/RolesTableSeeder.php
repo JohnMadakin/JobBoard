@@ -25,5 +25,13 @@ class RolesTableSeeder extends Seeder
                 'delete-job' => true,
             ]
         ]);
+        $admin = Role::create([
+            'role' => 'Admin',
+            'permissions' => [
+                'update-job' => true,
+                'publish-job' => true,
+                'delete-job' => true,
+            ]
+        ]);
     }
 }

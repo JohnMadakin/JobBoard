@@ -1,3 +1,11 @@
-Example
- [x] Example
+User
+ [x] Users can signup
+ [x] Users cant signup if role isInvalid
+ [x] Users cant signup if email isNotUnique
+ [x] Users cant signup if password length isLessThan6
+
+ControllerHelper
+ [x] Hash password
+ [x] Verify valid password
+ [x] Verify invalid password
 

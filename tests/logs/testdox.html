@@ -28,9 +28,18 @@
         </style>
     </head>
     <body>
-        <h2 id="ExampleTest">Example</h2>
+        <h2 id="UserTest">User</h2>
         <ul>
-            <li style="color: #555753;">✓ Example</li>
+            <li style="color: #555753;">✓ Users can signup</li>
+            <li style="color: #555753;">✓ Users cant signup if role isInvalid</li>
+            <li style="color: #555753;">✓ Users cant signup if email isNotUnique</li>
+            <li style="color: #555753;">✓ Users cant signup if password length isLessThan6</li>
+        </ul>
+        <h2 id="ControllerHelperTest">ControllerHelper</h2>
+        <ul>
+            <li style="color: #555753;">✓ Hash password</li>
+            <li style="color: #555753;">✓ Verify valid password</li>
+            <li style="color: #555753;">✓ Verify invalid password</li>
         </ul>
     </body>
 </html>

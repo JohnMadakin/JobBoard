@@ -2,7 +2,8 @@
 
 namespace App\Providers;
 
-use App\User;
+use App\Models\User;
+use App\Models\Job;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -15,7 +16,26 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->registerJobPolicies();
+    }
+
+    public function registerJobPolicies()
+    {
+        Gate::define( 'apply-job', function ($user) {
+            return $user->hasAccess([ 'apply-job']);
+        });
+        Gate::define('update-job', function ($user, Job $job) {
+            return $user->hasAccess([ 'update-job']) or $user->id == $job->user_id;
+        });
+        Gate::define('publish-job', function ($user) {
+            return $user->hasAccess(['publish-job']);
+        });
+        Gate::define('delete-job', function ($user) {
+            return $user->hasAccess(['delete-job']);
+        });
+        Gate::define('see-all-jobs', function ($user) {
+            return $user->inRole('employer');
+        });
     }
 
     /**
