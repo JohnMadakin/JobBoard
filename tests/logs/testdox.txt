@@ -1,8 +1,12 @@
 User
- [x] Users can signup
+ [x] Applicants can signup
+ [x] Employers can signup
  [x] Users cant signup if role isInvalid
  [x] Users cant signup if email isNotUnique
  [x] Users cant signup if password length isLessThan6
+ [x] Applicants can login
+ [x] Should not login invalid email
+ [x] Should not login invalid password
 
 ControllerHelper
  [x] Hash password

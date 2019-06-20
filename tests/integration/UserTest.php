@@ -12,7 +12,7 @@ class UserTest extends TestCase
    *
    * @return void
    */
-  public function test_users_can_signup()
+  public function test_applicants_can_signup()
   {
     $params = [
       'password' => 'password',
@@ -27,6 +27,23 @@ class UserTest extends TestCase
       ]);
     $this->assertEquals(12, User::count());
   }
+
+  public function test_employers_can_signup()
+  {
+    $params = [
+      'password' => 'password',
+      'email' => 'example@test.com',
+      'role' =>  'employer'
+    ];
+    $this->json('POST', '/api/v1/signup', $params)
+      ->seeStatusCode(201)
+      ->seeJson([
+        'success' => true,
+        'message' => 'you have successfully registered'
+      ]);
+    $this->assertEquals(12, User::count());
+  }
+
 
   /**
    * A users cant signup if role is invalid
@@ -86,6 +103,62 @@ class UserTest extends TestCase
         'password' => ['The password must be at least 6 characters.']
       ]);
     $this->assertEquals(11, User::count());
+  }
+
+  public function test_applicants_can_login()
+  {
+    $user = [
+      'password' => 'pass1233',
+      'email' => 'test1@test.com',
+      'role' =>  'applicant'
+    ];
+    $this->call('POST', '/api/v1/signup', $user);
+
+    $this->json('POST', '/api/v1/login', $user)
+      ->seeStatusCode(200)
+      ->seeJson([
+        'success' => true,
+        'message' => 'login successfull'
+      ]);
+  }
+
+  public function test_should_not_login_invalid_email()
+  {
+    $user = [
+      'password' => 'pass1233',
+      'email' => 'test1@test.com',
+      'role' =>  'applicant'
+    ];
+    $this->call('POST', '/api/v1/signup', $user);
+
+    $this->json('POST', '/api/v1/login',[
+      'password' => 'pass1233',
+      'email' => 'test1223@test.com',
+    ])
+      ->seeStatusCode(422)
+      ->seeJson([
+        'email' => ['The selected email is invalid.']
+      ]);
+  }
+
+  public function test_should_not_login_invalid_password()
+  {
+    $user = [
+      'password' => 'pass1233',
+      'email' => 'test1@test.com',
+      'role' =>  'applicant'
+    ];
+    $this->call('POST', '/api/v1/signup', $user);
+
+    $this->json('POST', '/api/v1/login', [
+      'password' => 'pass1ii',
+      'email' => 'test@test.com',
+    ])
+    ->seeStatusCode(422)
+    ->seeJson([
+      'success' => false,
+      'message' => 'Password is wrong.'
+    ]);
   }
 
 

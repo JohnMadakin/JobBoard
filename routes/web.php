@@ -19,6 +19,10 @@ $router->get('/', function () use ($router) {
 $router->post($api . 'signup', [
     'uses' => 'UserController@register'
 ]);
+$router->post($api . 'login', [
+    'uses' => 'UserController@authenticate'
+]);
+
 
 // $router->group(
 //     ['middleware' => ['auth', 'authorise']],

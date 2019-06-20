@@ -27,11 +27,6 @@ class UserController extends Controller
     $this->request = $request;
   }
   
-  public function authenticate()
-  {
-
-  }
-
   public static function getRole(String $role)
   {
     if ($role === 'applicant') return 1;
@@ -53,6 +48,7 @@ class UserController extends Controller
       $user = new UserService();
       try {
       $userDetail = $user->createUser(trim($email), $password, $roleId);
+      $userDetail['exp'] = time() + 60*60*24*7;
       return response()->json([
         'success' => true,
         'message' => 'you have successfully registered',
@@ -65,4 +61,36 @@ class UserController extends Controller
       ], 500);
       }
   }
+
+  /**
+   * Authenticate a user and return the token if the provided credentials are correct.
+   * 
+   * @param  \App\User   $user 
+   * @return mixed
+   */
+
+  public function authenticate()
+  {
+    $this->validate($this->request, [
+      'email' => 'required|email|exists:users',
+      'password' => 'required|min:6',
+    ]);
+    $email = $this->request->input('email');
+    $password = $this->request->input('password');
+    $user = new UserService();
+    $userFound = $user->getUser($email);
+    if(ControllerHelpers::verifyPassword($password, $userFound->password)) {
+      $userFound['exp'] = time() + 60*60*24*7;
+      return response()->json([
+        'success' => true,
+        'message' => 'login successfull',
+        'token' => ControllerHelpers::generateJWT($userFound)
+      ], 200);
+    }
+    return response()->json([
+      'success' => false,
+      'message' => 'Password is wrong.'
+    ], 422);
+  }
+
 }
