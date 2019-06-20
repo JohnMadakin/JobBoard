@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="tests" tests="7" assertions="19" errors="0" failures="0" skipped="0" time="7.711948">
-    <testsuite name="UserTest" file="/Users/edafeadjekeemunotor/Documents/laravel/JobBoard/tests/integration/UserTest.php" tests="4" assertions="13" errors="0" failures="0" skipped="0" time="4.404400">
-      <testcase name="test_users_can_signup" class="UserTest" classname="UserTest" file="/Users/edafeadjekeemunotor/Documents/laravel/JobBoard/tests/integration/UserTest.php" line="15" assertions="4" time="1.607121"/>
-      <testcase name="test_users_cant_signup_if_role_isInvalid" class="UserTest" classname="UserTest" file="/Users/edafeadjekeemunotor/Documents/laravel/JobBoard/tests/integration/UserTest.php" line="36" assertions="3" time="0.854741"/>
-      <testcase name="test_users_cant_signup_if_email_isNotUnique" class="UserTest" classname="UserTest" file="/Users/edafeadjekeemunotor/Documents/laravel/JobBoard/tests/integration/UserTest.php" line="56" assertions="3" time="0.977512"/>
-      <testcase name="test_users_cant_signup_if_password_length_isLessThan6" class="UserTest" classname="UserTest" file="/Users/edafeadjekeemunotor/Documents/laravel/JobBoard/tests/integration/UserTest.php" line="76" assertions="3" time="0.965026"/>
+  <testsuite name="tests" tests="11" assertions="31" errors="0" failures="0" skipped="0" time="12.825711">
+    <testsuite name="UserTest" file="/Users/edafeadjekeemunotor/Documents/laravel/JobBoard/tests/integration/UserTest.php" tests="8" assertions="25" errors="0" failures="0" skipped="0" time="9.498927">
+      <testcase name="test_applicants_can_signup" class="UserTest" classname="UserTest" file="/Users/edafeadjekeemunotor/Documents/laravel/JobBoard/tests/integration/UserTest.php" line="15" assertions="4" time="1.748978"/>
+      <testcase name="test_employers_can_signup" class="UserTest" classname="UserTest" file="/Users/edafeadjekeemunotor/Documents/laravel/JobBoard/tests/integration/UserTest.php" line="31" assertions="4" time="1.098289"/>
+      <testcase name="test_users_cant_signup_if_role_isInvalid" class="UserTest" classname="UserTest" file="/Users/edafeadjekeemunotor/Documents/laravel/JobBoard/tests/integration/UserTest.php" line="53" assertions="3" time="1.020375"/>
+      <testcase name="test_users_cant_signup_if_email_isNotUnique" class="UserTest" classname="UserTest" file="/Users/edafeadjekeemunotor/Documents/laravel/JobBoard/tests/integration/UserTest.php" line="73" assertions="3" time="1.034860"/>
+      <testcase name="test_users_cant_signup_if_password_length_isLessThan6" class="UserTest" classname="UserTest" file="/Users/edafeadjekeemunotor/Documents/laravel/JobBoard/tests/integration/UserTest.php" line="93" assertions="3" time="1.071121"/>
+      <testcase name="test_applicants_can_login" class="UserTest" classname="UserTest" file="/Users/edafeadjekeemunotor/Documents/laravel/JobBoard/tests/integration/UserTest.php" line="108" assertions="3" time="1.172947"/>
+      <testcase name="test_should_not_login_invalid_email" class="UserTest" classname="UserTest" file="/Users/edafeadjekeemunotor/Documents/laravel/JobBoard/tests/integration/UserTest.php" line="125" assertions="2" time="1.112556"/>
+      <testcase name="test_should_not_login_invalid_password" class="UserTest" classname="UserTest" file="/Users/edafeadjekeemunotor/Documents/laravel/JobBoard/tests/integration/UserTest.php" line="144" assertions="3" time="1.239801"/>
     </testsuite>
-    <testsuite name="ControllerHelperTest" file="/Users/edafeadjekeemunotor/Documents/laravel/JobBoard/tests/unit-tests/ControllerHelperTest.php" tests="3" assertions="6" errors="0" failures="0" skipped="0" time="3.307548">
-      <testcase name="test_hash_password" class="ControllerHelperTest" classname="ControllerHelperTest" file="/Users/edafeadjekeemunotor/Documents/laravel/JobBoard/tests/unit-tests/ControllerHelperTest.php" line="12" assertions="2" time="1.089258"/>
-      <testcase name="test_verify_valid_password" class="ControllerHelperTest" classname="ControllerHelperTest" file="/Users/edafeadjekeemunotor/Documents/laravel/JobBoard/tests/unit-tests/ControllerHelperTest.php" line="25" assertions="2" time="1.215081"/>
-      <testcase name="test_verify_invalid_password" class="ControllerHelperTest" classname="ControllerHelperTest" file="/Users/edafeadjekeemunotor/Documents/laravel/JobBoard/tests/unit-tests/ControllerHelperTest.php" line="38" assertions="2" time="1.003209"/>
+    <testsuite name="ControllerHelperTest" file="/Users/edafeadjekeemunotor/Documents/laravel/JobBoard/tests/unit-tests/ControllerHelperTest.php" tests="3" assertions="6" errors="0" failures="0" skipped="0" time="3.326784">
+      <testcase name="test_hash_password" class="ControllerHelperTest" classname="ControllerHelperTest" file="/Users/edafeadjekeemunotor/Documents/laravel/JobBoard/tests/unit-tests/ControllerHelperTest.php" line="12" assertions="2" time="1.044202"/>
+      <testcase name="test_verify_valid_password" class="ControllerHelperTest" classname="ControllerHelperTest" file="/Users/edafeadjekeemunotor/Documents/laravel/JobBoard/tests/unit-tests/ControllerHelperTest.php" line="25" assertions="2" time="1.097313"/>
+      <testcase name="test_verify_invalid_password" class="ControllerHelperTest" classname="ControllerHelperTest" file="/Users/edafeadjekeemunotor/Documents/laravel/JobBoard/tests/unit-tests/ControllerHelperTest.php" line="38" assertions="2" time="1.185269"/>
     </testsuite>
   </testsuite>
 </testsuites>

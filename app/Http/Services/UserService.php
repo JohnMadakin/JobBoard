@@ -9,21 +9,18 @@ use Illuminate\Support\Facades\DB;
 
 class UserService
 {
-  // /**
-  //  * Get a user from the DB using userName or email as optional parameters.
-  //  * 
-  //  * @param  userName $userName
-  //  * @param email $email
-  //  * @param password $passwword
-  //  * @return mixed
-  //  */
-  // public function getUser($userName = Null, $email = Null)
-  // {
-  //   if (!empty($userName)) {
-  //     return User::where('userName', $userName)->first();
-  //   }
-  //   return User::where('email', $email)->first();
-  // }
+  /**
+   * Get a user from the DB using userName or email as optional parameters.
+   * 
+   * @param  userName $userName
+   * @param email $email
+   * @param password $passwword
+   * @return mixed
+   */
+  public function getUser($email)
+  {
+    return User::where('email', $email)->first();
+  }
 
   // /**
   //  * find user by id
