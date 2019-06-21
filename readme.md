@@ -1,4 +1,4 @@
-# Lumen PHP Framework
+# JobBoard
 [![Build Status](https://travis-ci.com/JohnMadakin/JobBoard.svg?branch=develop)](https://travis-ci.com/JohnMadakin/JobBoard)
 
 
