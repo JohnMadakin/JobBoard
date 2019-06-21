@@ -180,7 +180,7 @@ class UserTest extends TestCase
       'imageLink' => 'http://googledrive.com/image/1',
       'cvLink' =>  'http://googledrive.com/docs/1',
     ];
-    $this->post('/api/v1/profiles/1', $profile, $header)
+    $this->put('/api/v1/profiles/1', $profile, $header)
       ->seeStatusCode(200)
       ->seeJson([
         'success' => true,
@@ -208,7 +208,7 @@ class UserTest extends TestCase
       'imageLink' => 'http://googledrive.com/image/1',
       'cvLink' =>  'http://googledrive.com/docs/1',
     ];
-    $this->post('/api/v1/profiles/2', $profile, $header)
+    $this->put('/api/v1/profiles/2', $profile, $header)
       ->seeStatusCode(403)
       ->seeJson([
         'success' => false,
@@ -236,7 +236,7 @@ class UserTest extends TestCase
       'imageLink' => 'http://googledrive.com/image/1',
       'cvLink' =>  'http://googledrive.com/docs/1',
     ];
-    $this->post('/api/v1/profiles/1', $profile, $header)
+    $this->put('/api/v1/profiles/1', $profile, $header)
       ->seeStatusCode(401)
       ->seeJson([
         'success' => false,
@@ -264,15 +264,12 @@ class UserTest extends TestCase
       'imageLink' => 'http://googledrive.com/image/1',
       'cvLink' =>  'http://googledrive.com/docs/1',
     ];
-    $this->post('/api/v1/profiles/1', $profile, $header)
+    $this->put('/api/v1/profiles/1', $profile, $header)
       ->seeStatusCode(400)
       ->seeJson([
         'success' => false,
         'message' => 'Malformed or Invalid token.'
       ]);
   }
-
-
-
 
 }

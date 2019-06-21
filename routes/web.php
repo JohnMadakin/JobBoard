@@ -27,7 +27,7 @@ $router->post($api . 'login', [
 $router->group(
     ['middleware' => ['auth', 'canUpdateProfile']],
     function () use ($router, $api) {
-        $router->post($api . 'profiles/{id}', [
+        $router->put($api . 'profiles/{id}', [
             'uses' => 'ProfileController@updateProfile'
         ]);
     }
