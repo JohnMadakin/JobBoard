@@ -30,14 +30,14 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'password',
     ];
 
-    public function profile()
+    public function profiles()
     {
         return $this->hasOne('App\Models\Profile', 'userId', 'id');
     }
 
     public function roles()
     {
-        return $this->belongsToMany( 'App\Models\Role', 'userRoles', 'userId', 'roleId')->withTimestamps();
+        return $this->belongsTo( 'App\Models\Role', 'roleId');
     }
 
     /**
@@ -45,7 +45,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function hasAccess(array $permissions): bool
     {
+        var_dump($permissions);
         foreach ($this->roles as $role) {
+            var_dump($role);
+
             if ($role->hasAccess($permissions)) {
                 return true;
             }

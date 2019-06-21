@@ -1,7 +1,6 @@
 <?php
 use App\Models\User;
 use Laravel\Lumen\Testing\DatabaseMigrations;
-use Laravel\Lumen\Testing\DatabaseTransactions;
 
 class UserTest extends TestCase
 {
@@ -161,5 +160,116 @@ class UserTest extends TestCase
     ]);
   }
 
+  public function test_should_edit_profile()
+  {
+    $user = [
+      'password' => 'pass1233',
+      'email' => 'test1@test.com',
+      'role' =>  'applicant'
+    ];
+    $response = $this->call('POST', '/api/v1/signup', $user);
+    $token = json_decode($response->getContent())->token;
+    $header = [ 'Api-Token' => $token];
+    $profile = [
+      'firstName' => 'test',
+      'lastName' => 'test',
+      'specialization' =>  'Education',
+      'dob' => '12/02/1992',
+      'address' => '234 test str',
+      'company' =>  'andela',
+      'imageLink' => 'http://googledrive.com/image/1',
+      'cvLink' =>  'http://googledrive.com/docs/1',
+    ];
+    $this->put('/api/v1/profiles/1', $profile, $header)
+      ->seeStatusCode(200)
+      ->seeJson([
+        'success' => true,
+        'message' => 'Profile Updated'
+      ]);
+  }
+
+  public function test_should_not_edit_profile_if_isNotOwner()
+  {
+    $user = [
+      'password' => 'pass1233',
+      'email' => 'test1@test.com',
+      'role' =>  'applicant'
+    ];
+    $response = $this->call('POST', '/api/v1/signup', $user);
+    $token = json_decode($response->getContent())->token;
+    $header = ['Api-Token' => $token];
+    $profile = [
+      'firstName' => 'test',
+      'lastName' => 'test',
+      'specialization' =>  'Education',
+      'dob' => '12/02/1992',
+      'address' => '234 test str',
+      'company' =>  'andela',
+      'imageLink' => 'http://googledrive.com/image/1',
+      'cvLink' =>  'http://googledrive.com/docs/1',
+    ];
+    $this->put('/api/v1/profiles/2', $profile, $header)
+      ->seeStatusCode(403)
+      ->seeJson([
+        'success' => false,
+        'message' => 'sorry, you can only edit your profile'
+      ]);
+  }
+
+  public function test_should_not_edit_profile_if_noToken()
+  {
+    $user = [
+      'password' => 'pass1233',
+      'email' => 'test1@test.com',
+      'role' =>  'applicant'
+    ];
+    $response = $this->call('POST', '/api/v1/signup', $user);
+    $token = json_decode($response->getContent())->token;
+    $header = ['Api-Token' => ''];
+    $profile = [
+      'firstName' => 'test',
+      'lastName' => 'test',
+      'specialization' =>  'Education',
+      'dob' => '12/02/1992',
+      'address' => '234 test str',
+      'company' =>  'andela',
+      'imageLink' => 'http://googledrive.com/image/1',
+      'cvLink' =>  'http://googledrive.com/docs/1',
+    ];
+    $this->put('/api/v1/profiles/1', $profile, $header)
+      ->seeStatusCode(401)
+      ->seeJson([
+        'success' => false,
+        'message' => 'Unauthorized.'
+      ]);
+  }
+
+  public function test_should_not_edit_profile_if_malformedToken()
+  {
+    $user = [
+      'password' => 'pass1233',
+      'email' => 'test1@test.com',
+      'role' =>  'applicant'
+    ];
+    $response = $this->call('POST', '/api/v1/signup', $user);
+    $token = json_decode($response->getContent())->token;
+    $header = ['Api-Token' => $token.'222'];
+    $profile = [
+      'firstName' => 'test',
+      'lastName' => 'test',
+      'specialization' =>  'Education',
+      'dob' => '12/02/1992',
+      'address' => '234 test str',
+      'company' =>  'andela',
+      'imageLink' => 'http://googledrive.com/image/1',
+      'cvLink' =>  'http://googledrive.com/docs/1',
+    ];
+    $this->put('/api/v1/profiles/1', $profile, $header)
+      ->seeStatusCode(400)
+      ->seeJson([
+        'success' => false,
+        'message' => 'Malformed or Invalid token.'
+      ]);
+  }
 
 }

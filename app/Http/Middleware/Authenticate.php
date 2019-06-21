@@ -4,6 +4,9 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Factory as Auth;
+use Exception;
+
+
 
 class Authenticate
 {
@@ -35,9 +38,25 @@ class Authenticate
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        if ($this->auth->guard($guard)->guest()) {
-            return response('Unauthorized.', 401);
+        try {
+            if ($this->auth->guard($guard)->guest()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthorized.'
+                ], 401);
+            }
+        } catch (ExpiredException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Provided token is expired.'
+            ], 400);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Malformed or Invalid token.'
+            ], 400);
         }
+
 
         return $next($request);
     }
