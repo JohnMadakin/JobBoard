@@ -19,6 +19,7 @@ class UsersTableSeeder extends Seeder
         User::create([
             'password' => $bcrypt->make('password@1'),
             'email' => 'test@test.com',
-        ])->roles()->attach(3);
+            'roleId' => 3
+        ]);
     }
 }

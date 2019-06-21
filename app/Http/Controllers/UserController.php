@@ -55,10 +55,10 @@ class UserController extends Controller
         'token' => ControllerHelpers::generateJWT($userDetail)
       ], 201);
       } catch(Exception $ex){
-      return response()->json([
-        'success' => false,
-        'message' => 'Server Error Occured'
-      ], 500);
+          return response()->json([
+            'success' => false,
+            'message' => 'Server Error Occured'
+          ], 500);
       }
   }
 
@@ -79,6 +79,7 @@ class UserController extends Controller
     $password = $this->request->input('password');
     $user = new UserService();
     $userFound = $user->getUser($email);
+    // var_dump($userFound);
     if(ControllerHelpers::verifyPassword($password, $userFound->password)) {
       $userFound['exp'] = time() + 60*60*24*7;
       return response()->json([
@@ -92,5 +93,4 @@ class UserController extends Controller
       'message' => 'Password is wrong.'
     ], 422);
   }
-
 }

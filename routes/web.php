@@ -24,14 +24,11 @@ $router->post($api . 'login', [
 ]);
 
 
-// $router->group(
-//     ['middleware' => ['auth', 'authorise']],
-//     function () use ($router, $api) {
-//         $router->get($api . 'users', [
-//             'uses' => 'UserController@getUsers'
-//         ]);
-//         $router->post($api . 'users', [
-//             'uses' => 'UserController@createNewUser'
-//         ]);
-//     }
-// );
+$router->group(
+    ['middleware' => ['auth', 'canUpdateProfile']],
+    function () use ($router, $api) {
+        $router->post($api . 'profiles/{id}', [
+            'uses' => 'ProfileController@updateProfile'
+        ]);
+    }
+);

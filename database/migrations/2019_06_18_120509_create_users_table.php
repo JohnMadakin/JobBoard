@@ -15,9 +15,12 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedInteger('roleId');
+            $table->foreign('roleId')->references('id')->on('roles');
             $table->string('password');
             $table->string('email')->unique();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -28,6 +31,7 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('profiles');
         Schema::dropIfExists('users');
     }
 }

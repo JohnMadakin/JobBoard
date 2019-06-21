@@ -15,6 +15,7 @@ class RolesTableSeeder extends Seeder
             'role' => 'Applicant',
             'permissions' => [
                 'apply-job' => true,
+                'update-profile' => true
             ]
         ]);
         $employer = Role::create([
@@ -23,6 +24,7 @@ class RolesTableSeeder extends Seeder
                 'update-job' => true,
                 'publish-job' => true,
                 'delete-job' => true,
+                'update-profile' => true
             ]
         ]);
         $admin = Role::create([
@@ -31,6 +33,7 @@ class RolesTableSeeder extends Seeder
                 'update-job' => true,
                 'publish-job' => true,
                 'delete-job' => true,
+                'update-profile' => true
             ]
         ]);
     }

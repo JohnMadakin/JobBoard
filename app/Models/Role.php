@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
 
 class Role extends Model
 {
@@ -22,7 +21,7 @@ class Role extends Model
 
   public function users()
   {
-    return $this->belongsToMany(User::class, 'userRoles', 'roleId', 'id')->withTimestamps();
+    return $this->hasMany('App\Models\User', 'roleId', 'id');
   }
 
   /**

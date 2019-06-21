@@ -3,7 +3,7 @@
 namespace App\Http\Services;
 
 use App\Models\User;
-use App\Models\Role;
+use App\Models\Profile;
 use Illuminate\Support\Facades\DB;
 
 
@@ -19,8 +19,10 @@ class UserService
    */
   public function getUser($email)
   {
-    return User::where('email', $email)->first();
+    return User::with('profiles')->where('email', $email)->first();
   }
+
+
 
   // /**
   //  * find user by id
@@ -61,14 +63,20 @@ class UserService
    */
   public function createUser($email,$password,$roleId)
   {
-    $user = User::create(
-      [
-        'email' => $email,
-        'password' => $password,
-      ]
-    );
-    $user->roles()->attach($roleId);
-    return $user;
+    return DB::transaction(function() use( $email, $password, $roleId){
+      $user = User::create(
+        [
+          'email' => $email,
+          'password' => $password,
+          'roleId' => $roleId
+        ]
+      );
+      $profile = Profile::create([
+        'userId' => $user->id
+      ]);
+      $user['profileId'] = $profile->id;
+      return $user;
+    });
   }
 
   // /**

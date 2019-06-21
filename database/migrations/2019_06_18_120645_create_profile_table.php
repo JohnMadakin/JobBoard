@@ -13,16 +13,19 @@ class CreateProfileTable extends Migration
      */
     public function up()
     {
-        Schema::create('profile', function (Blueprint $table) {
+        Schema::create('profiles', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->integer('userId')->unsigned();
             $table->foreign('userId')->references('id')->on('users')->onDelete('cascade');
-            $table->date('dateOfBith');
-            $table->text('imageUrl');
-            $table->string('address');
-            $table->text('cvLink');
+            $table->date('dateOfBirth')->nullable();
+            $table->text('imageUrl')->nullable();
+            $table->string('address')->nullable();
+            $table->string('company')->nullable();
+            $table->string('specialization')->nullable();
+            $table->text('cvLink')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

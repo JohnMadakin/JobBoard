@@ -7,6 +7,10 @@ User
  [x] Applicants can login
  [x] Should not login invalid email
  [x] Should not login invalid password
+ [x] Should edit profile
+ [x] Should not edit profile if isNotOwner
+ [x] Should not edit profile if noToken
+ [x] Should not edit profile if malformedToken
 
 ControllerHelper
  [x] Hash password
