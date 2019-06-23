@@ -3,11 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-class Job extends Model
+
+class Applicant extends Model
 {
 
-  use SoftDeletes;
   /**
    * The attributes that are guarded.
    *
@@ -22,9 +21,9 @@ class Job extends Model
     return $this->belongsTo('App\Models\User', 'userId', 'id');
   }
 
-  function applicants()
+  function job()
   {
-    return $this->hasMany('App\Models\Applicant');
+    return $this->belongTo('App\Models\Job', 'jobId', 'id');
   }
 
   public function publishJob($query)

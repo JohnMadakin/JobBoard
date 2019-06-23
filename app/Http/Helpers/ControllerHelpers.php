@@ -81,25 +81,25 @@ class ControllerHelpers
    * @return string
    */
 
-  // public static function deserializeSort($sortString, $allowedFields, $allowedOrder)
-  // {
-  //   try {
-  //     $checkForValidDelimeter = strpos($sortString, '_');
-  //     $splitString = explode('_', $sortString);
-  //     if (!in_array($splitString[0], $allowedFields) || !in_array($splitString[1], $allowedOrder)) {
-  //       return false;
-  //     }
-  //     if ($checkForValidDelimeter != false) {
-  //       $deserialiseValue = array(
-  //         'column' => $splitString[0],
-  //         'order' => $splitString[1],
-  //       );
-  //       return $deserialiseValue;
-  //     }
-  //   } catch (Exception $ex) {
-  //     return false;
-  //   }
-  // }
+  public static function deserializeSort($sortString, $allowedFields, $allowedOrder)
+  {
+    try {
+      $checkForValidDelimeter = strpos($sortString, '_');
+      $splitString = explode('_', $sortString);
+      if (!in_array($splitString[0], $allowedFields) || !in_array($splitString[1], $allowedOrder)) {
+        return false;
+      }
+      if ($checkForValidDelimeter != false) {
+        $deserialiseValue = array(
+          'column' => $splitString[0],
+          'order' => $splitString[1],
+        );
+        return $deserialiseValue;
+      }
+    } catch (Exception $ex) {
+      return false;
+    }
+  }
 
   /**
    * deserialize filtered data
