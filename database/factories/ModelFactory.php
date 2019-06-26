@@ -16,7 +16,7 @@ $factory->define(User::class, function (Faker\Generator $faker) {
     $bcrypt = new BcryptHasher();
     return [
         'email' => $faker->email,
-        'roleId' => rand(1,2),
+        'role_id' => rand(1,2),
         'password' => $bcrypt->make('12345678'),
     ];
 });

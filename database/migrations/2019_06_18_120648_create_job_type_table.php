@@ -13,7 +13,7 @@ class CreateJobTypeTable extends Migration
      */
     public function up()
     {
-        Schema::create('jobType', function (Blueprint $table) {
+        Schema::create('jobTypes', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name')->unique();
             $table->timestamps();
@@ -27,6 +27,6 @@ class CreateJobTypeTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('jobType');
+        Schema::dropIfExists('jobTypes');
     }
 }

@@ -26,6 +26,21 @@ class ProfileController extends Controller
     $this->request = $request;
   }
 
+  public function validateRequest(Request $request)
+  {
+
+    $rules = [
+      'dob' => 'sometimes|date',
+      'address' => 'sometimes|min:6',
+      'imageUrl' => 'sometimes|url',
+      'company' => 'sometimes|min:6',
+      'specId' => 'required|exists:specs,id',
+      'cvLink' => 'sometimes|url',
+      'firstName' => 'required|regex:/^[a-z ,.\'-]+$/i |max:100',
+      'lastName' => 'required|regex:/^[a-z ,.\'-]+$/i |max:100',
+    ];
+    $this->validate($request, $rules);
+  }
   /**
    * update a user profile
    * 
@@ -35,42 +50,18 @@ class ProfileController extends Controller
 
   public function updateProfile()
   {
-    $this->validate($this->request, [
-      'dob' => 'sometimes|date',
-      'address' => 'sometimes|min:6',
-      'imageUrl' => 'sometimes|url',
-      'company' => 'sometimes|min:6',
-      'specialization' => 'sometimes|string',
-      'cvLink' => 'sometimes|url',
-      'firstName' => 'required|regex:/^[a-z ,.\'-]+$/i |max:100',
-      'lastName' => 'required|regex:/^[a-z ,.\'-]+$/i |max:100',
-    ]);
+    $this->validateRequest($this->request);
     $profileId = $this->request->id;
-    $userObject = array(
-      'profileId' => $profileId,
-      'name' => trim($this->request->input('firstName')) .' '. trim($this->request->input('lastName')),
-      'dob' => $this->request->input('dob'),
-      'email' => $this->request->input('email'),
-      'address' => $this->request->input('address'),
-      'imageUrl' => $this->request->input('imageUrl'),
-      'company' => $this->request->input('company'),
-      'cvLink' => $this->request->input('cvLink'),
-      'specialization' => $this->request->input( 'specialization'),
-    );
+    $userObject = $this->request->only('firstName', 'lastName', 'dob', 'address', 'imageUrl', 'company', 'cvLink', 'specId');
+    $userObject['profileId'] = $profileId;
     try {
       $userProfile = new ProfileService();
       $profile = $userProfile->update($userObject);
       if ($profile) {
-        return response()->json([
-          'success' => true,
-          'message' => 'Profile Updated',
-        ], 200);
+        return $this->success('Profile Updated',$userObject,200);
       }
     } catch (Exception $ex) {
-      return response()->json([
-        'success' => false,
-        'message' => 'Server Error Occured'
-      ], 500);
+      return $this->success('Server Error Occured',500);
     }
   }
 }

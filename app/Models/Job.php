@@ -19,7 +19,11 @@ class Job extends Model
 
   function owner()
   {
-    return $this->belongsTo('App\Models\User', 'userId', 'id');
+    return $this->belongsTo('App\Models\User');
+  }
+  function jobTypes()
+  {
+    return $this->belongsTo('App\Models\JobType');
   }
 
   function applicants()
