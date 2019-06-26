@@ -68,15 +68,25 @@ class UserService
         [
           'email' => $email,
           'password' => $password,
-          'roleId' => $roleId
+          'role_id' => $roleId
         ]
       );
       $profile = Profile::create([
-        'userId' => $user->id
+        'user_id' => $user->id
       ]);
       $user['profileId'] = $profile->id;
       return $user;
     });
+  }
+
+  public static function getClient()
+  {
+    $clauses = [
+      'id' => 1,
+      'password_client' => true,
+      'revoked' => false,
+    ];
+    return DB::table('oauth_clients')->where($clauses)->first();
   }
 
   // /**

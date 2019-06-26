@@ -8,7 +8,7 @@ use App\Models\Profile;
 use App\Policies\ProfilePolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
-use \Firebase\JWT\JWT;
+use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -66,20 +66,18 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->registerJobPolicies();
+        // $this->registerJobPolicies();
 
         // Here you may define how you wish users to be authenticated for your Lumen
         // application. The callback which receives the incoming request instance
         // should return either a User instance or null. You're free to obtain
         // the User instance via an API token or any other method necessary.
 
-        $this->app['auth']->viaRequest('api', function ($request) {
-            $token = $request->header('Api-Token');
-            if($token) {
-                $credentials = JWT::decode($token, env('JWT_SECRET'), ['HS256']);
-                return User::where('id', $credentials->id)->first();
-            }
-        });
         // $this->registerPolicies();
+        Passport::tokensCan([
+            'create-jobs' => 'Create Jobs',
+            'update-jobs' => 'Update Jobs',
+            'apply-jobs' => 'Apply for Jobs',
+        ]);
     }
 }

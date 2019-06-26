@@ -23,8 +23,8 @@ class ProfileService
       'imageUrl' => $user['imageUrl'],
       'address' => $user['address'],
       'company' => $user['company'],
-      'specialization' => $user['specialization'],
-      'name' => $user['name'],
+      'spec_id' => $user['specId'],
+      'name' => trim($user['firstName']) .' '. trim($user['lastName']),
       'cvLink' => $user['cvLink']
     ]);
   }

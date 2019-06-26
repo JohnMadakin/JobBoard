@@ -15,7 +15,7 @@ class UserController extends Controller
    * @var \Illuminate\Http\Request
    */
   private $request;
-
+  private $client;
   /**
    * Create a new controller instance.
    *
@@ -25,41 +25,65 @@ class UserController extends Controller
   public function __construct(Request $request)
   {
     $this->request = $request;
+    $this->client = UserService::getCLient();
   }
   
-  public static function getRole(String $role)
+  public function getRole(String $role)
   {
-    if ($role === 'applicant') return 1;
-    return 2;
+    if ($role === 'applicant'){
+      $applicant = [
+        'roleId' => 1,
+        'scope' => 'apply-jobs'
+      ];
+      return $applicant;
+    }
+    $employer = [
+      'roleId' => 2,
+      'scope' => 'create-jobs update-jobs'
+    ];
+
+    return $employer;
+  }
+
+  public function generateToken($username, $password,$scope, $client)
+  {
+    return REQUEST::create(
+      'api/v1/oauth/token',
+      'POST',
+      [
+        'grant_type' => 'password',
+        'username' => $username,
+        'password' => $password,
+        'client_id' => $client->id,
+        'client_secret' => $client->secret,
+        'scope' => $scope
+      ]
+   );
   }
 
 
   public function register()
   {
+    global $app;
     $this->validate($this->request, [
       'email' => 'required|unique:users',
       'password' => 'required|min:6',
       'role' => 'required|in:employer,applicant'
     ]);
+    $email = $this->request->input('email');
+    $password = ControllerHelpers::hashPassword($this->request->input('password'));
+    $role = $this->getRole($this->request->input('role'));
+    $user = new UserService();
+    try {
+      $userDetail = $user->createUser(trim($email), $password, $role['roleId']);
+      $token = $this->generateToken($email, $this->request->input('password'), $role['scope'],$this->client
+      );
 
-      $email = $this->request->input('email');
-      $password = ControllerHelpers::hashPassword($this->request->input('password'));
-      $roleId = $this->getRole($this->request->input('role'));
-      $user = new UserService();
-      try {
-      $userDetail = $user->createUser(trim($email), $password, $roleId);
-      $userDetail['exp'] = time() + 60*60*24*7;
-      return response()->json([
-        'success' => true,
-        'message' => 'you have successfully registered',
-        'token' => ControllerHelpers::generateJWT($userDetail)
-      ], 201);
-      } catch(Exception $ex){
-          return response()->json([
-            'success' => false,
-            'message' => 'Server Error Occured'
-          ], 500);
-      }
+      return $app->dispatch($token);
+    } catch(Exception $ex){
+      $message = 'Server Error Occured';
+      return $this->error($message, 500);
+    }
   }
 
   /**
@@ -71,6 +95,7 @@ class UserController extends Controller
 
   public function authenticate()
   {
+    global $app;
     $this->validate($this->request, [
       'email' => 'required|email|exists:users',
       'password' => 'required|min:6',
@@ -79,18 +104,22 @@ class UserController extends Controller
     $password = $this->request->input('password');
     $user = new UserService();
     $userFound = $user->getUser($email);
-    // var_dump($userFound);
     if(ControllerHelpers::verifyPassword($password, $userFound->password)) {
-      $userFound['exp'] = time() + 60*60*24*7;
-      return response()->json([
-        'success' => true,
-        'message' => 'login successfull',
-        'token' => ControllerHelpers::generateJWT($userFound)
-      ], 200);
+      $scope = $this->getUserScopeByRoleId($userFound->role_id);
+      $token = $this->generateToken($email, $password, $scope, $this->client);
+
+      return $app->dispatch($token);
     }
-    return response()->json([
-      'success' => false,
-      'message' => 'Password is wrong.'
-    ], 422);
+    $message = 'Email or Password is wrong.';
+    return $this->error($message,422);
   }
+
+  public function getUserScopeByRoleId($roleId)
+  {
+    if($roleId == 1) return 'apply-jobs';
+    if($roleId == 2) return 'create-jobs update-jobs';
+    return '';
+  }
+
+
 }

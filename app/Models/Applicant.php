@@ -18,12 +18,12 @@ class Applicant extends Model
 
   function owner()
   {
-    return $this->belongsTo('App\Models\User', 'userId', 'id');
+    return $this->belongsTo('App\Models\User');
   }
 
   function job()
   {
-    return $this->belongTo('App\Models\Job', 'jobId', 'id');
+    return $this->belongTo('App\Models\Job');
   }
 
   public function publishJob($query)
