@@ -24,7 +24,7 @@ class CreateJobsTable extends Migration
             $table->text('experience');
             $table->text('additionalCompetences')->nullable();
             $table->text('guideline');
-            $table->string('salary');
+            $table->string('salary')->default('No Details Yet');
             $table->date('expiryDate');
             $table->integer('spec_id')->unsigned();
             $table->foreign('spec_id')->references('id')-> on('specs');

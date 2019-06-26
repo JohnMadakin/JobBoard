@@ -16,12 +16,12 @@ class Applicant extends Model
     'id',
   ];
 
-  function owner()
+  public function owner()
   {
     return $this->belongsTo('App\Models\User');
   }
 
-  function job()
+  public function job()
   {
     return $this->belongTo('App\Models\Job');
   }

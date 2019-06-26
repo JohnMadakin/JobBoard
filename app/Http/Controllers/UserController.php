@@ -118,6 +118,7 @@ class UserController extends Controller
   {
     if($roleId == 1) return 'apply-jobs';
     if($roleId == 2) return 'create-jobs update-jobs';
+    if($roleId == 3) return 'create-jobs update-jobs';
     return '';
   }
 
