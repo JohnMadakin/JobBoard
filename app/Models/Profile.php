@@ -16,12 +16,12 @@ class Profile extends Model
         'id',
     ];
 
-    function user()
+    public function user()
     {
         return $this->belongsTo('App\Models\User');
     }
 
-    function spec()
+    public function spec()
     {
         return $this->belongsTo('App\Models\Spec');
     }

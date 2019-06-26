@@ -10,6 +10,9 @@ class JobType extends Model
 
   use SoftDeletes;
   protected $table = 'jobTypes';
+  protected $hidden = [
+    'deleted_at', 'created_at', 'updated_at'
+  ];
   /**
    * The attributes that are guarded.
    *
@@ -20,7 +23,7 @@ class JobType extends Model
   ];
 
 
-  function jobs()
+  public function jobs()
   {
     return $this->hasMany('App\Models\Job');
   }

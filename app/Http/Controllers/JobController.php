@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Services\ProfileService;
 use illuminate\Http\Request;
 use Illuminate\Validation\Validator;
+
+use App\Http\Services\ProfileService;
+use App\Http\Services\JobService;
+use App\Http\Helpers\ControllerHelpers;
 
 class JobController extends Controller
 {
@@ -37,42 +40,48 @@ class JobController extends Controller
     $jobId = $this->request->id;
     $jobs = new JobService();
     $result = $jobs->getById($jobId);
-    if ($result) {
-      return response()->json([
-        'success' => true,
-        'jobs' => $result
-      ], 200);
+    // var_dump($result);
+    if (($result)) {
+      return $this->success('Job found',$result,200);
     }
-    return response()->json([
-      'success' => false,
-      'message' => 'Job not Found'
-    ], 404);
+    return $this->error('Job not Found', 404);
+  }
+
+
+  /**
+   * Get Job by employerId
+   * 
+   * @param  \App\User   $user 
+   * @return mixed
+   */
+  public function getJobsByEmployerId()
+  {
+    $employerId = $this->request->id;
+    $jobs = new JobService();
+    $result = $jobs->getByUserId($employerId);
+    if (count($result) > 0) {
+      return $this->success('Jobs found',$result,200);
+    }
+    return $this->error('No Jobs Found for this Employer', 404);
   }
 
   /**
-   * Delete job
+   * Delete job 
    * 
    * @param  \App\User   $user 
    * @return mixed
    */
   public function deleteJob()
   {
+    //incomplete.. ensure the owner owns the resource he wants to delete
     $jobId = $this->request->id;
     $jobs = new JobService();
     $result = $jobs->delete($jobId);
     if ($result) {
-      return response()->json([
-        'success' => true,
-      ], 204);
+      return $this->success('Job Deleted',$result,204);
     }
-    return response()->json([
-      'success' => false,
-      'message' => 'Job not Found'
-    ], 404);
+    return $this->error('Job not Found', 404);
   }
-
-
-
 
   /**
    * Get Jobs
@@ -84,20 +93,21 @@ class JobController extends Controller
   {
     $pageSize = $this->request->query('size') ?? 10;
     $page = $this->request->query('page') ?? 1;
-    $sortBy = $this->request->query('sort') ?? 'name_asc';
+    $sortBy = $this->request->query('sort') ?? 'title_asc';
     $search = $this->request->query('search');
     $location = $this->request->query('location');
-    $spec = $this->request->query('specialization');
-    $jobType = $this->request->query('type');
-    $filter = [
+    $spec = $this->request->query('spec');
+    $jobType = $this->request->query('jobType');
+    $filter = Array(
       'location' => $location,
       'spec' => $spec,
       'jobType' => $jobType,
-    ];
-    $allowedFields = ['location', 'spec', 'jobType'];
+    );
+    // $allowedFilterFields = ['location', 'spec', 'jobType'];
+    $allowedSortFields = ['title','location'];
     $allowedOrder = ['asc', 'desc']; 
 
-    $sort = ControllerHelpers::deserializeSort($sortBy, $allowedFields, $allowedOrder);
+    $sort = ControllerHelpers::deserializeSort($sortBy, $allowedSortFields, $allowedOrder);
 
     if (!$sort) {
       return response()->json([
@@ -106,20 +116,18 @@ class JobController extends Controller
       ], 400);
     }
 
-    $users = new UserService();
+    $jobs = new JobService();
     try {
-      $result = $users->getJobs($page, $pageSize, $search, $sort, $filter);
+      // $result = 
+      $result = $jobs->getJobs($page, $pageSize, $search, $sort, $filter);
       if ($result) {
-        return response()->json([
-          'success' => true,
-          'users' => $result
-        ], 200);
+        return $this->success('Job(s) found',$result,200);
       }
+      return $this->error('Job not Found', 404);
+
     } catch (Exception $ex) {
-      return response()->json([
-        'success' => false,
-        'message' => 'your request could not be completed'
-      ], 400);
+        return $this->error('request couldnt be processed', 400);
+
     }
   }
 
@@ -128,17 +136,18 @@ class JobController extends Controller
     $this->validate($this->request,[
       'title' => 'required|string',
       'summary' => 'required|string|max:255',
-      'description' => 'sometimes|string',
-      'responsibilities' => 'sometimes|string',
-      'experience' => 'sometimes|string',
-      'additionalCompetences' => 'sometimes|string',
-      'guideline' => 'sometimes|string',
+      'description' => 'required|string',
+      'responsibilities' => 'required|string',
+      'experience' => 'required|string',
+      'additionalCompetencies' => 'required|string',
+      'guideline' => 'required|string',
       'expiryDate' => 'required|date',
-      'published' => 'sometimes|boolean',
+      'published' => 'required|boolean',
       'expiryDate' => 'required|date',
-      'location' => 'sometimes|string',
-      'jobTypeId' => 'required|exists:jobTypes',
-      'specId' => 'required|exists:specs',
+      'salary' => 'required|string',
+      'location' => 'required|string',
+      'jobTypeId' => 'required|exists:jobTypes,id',
+      'specId' => 'required|exists:specs,id',
     ]);
     return array(
       'title' => trim($this->request->input('title')),
@@ -146,13 +155,14 @@ class JobController extends Controller
       'description' => trim($this->request->input('description')),
       'responsibilities' => trim($this->request->input('responsibilities')),
       'experience' => trim($this->request->input('experience')),
-      'additionalCompetences' => trim($this->request->input('additionalCompetences')),
+      'additionalCompetencies' => trim($this->request->input('additionalCompetencies')),
       'guideline' => trim($this->request->input('guideline')),
       'published' => $this->request->input('published'),
       'expiryDate' => trim($this->request->input('expiryDate')),
       'location' => trim($this->request->input('location')),
-      'jobTypeId' => trim($this->request->input('jobTypeId')),
+      'jobTypeId' => $this->request->input('jobTypeId'),
       'specId' => $this->request->input('specId'),
+      'salary' => $this->request->input('salary')
     );
   }
 
@@ -174,19 +184,13 @@ class JobController extends Controller
       $job = new JobService();
       $jobCreated = $job->create($jobObject);
       if ($jobCreated) {
-        return response()->json([
-          'success' => true,
-          'data' => [
-            'jobId' => $jobCreated->id
-          ],
-          'message' => 'Job Created',
-        ], 201);
+        $data = [
+          'jobId' => $jobCreated->id
+        ];
+        return $this->success('Job Created',$data,201);
       }
     } catch (Exception $ex) {
-      return response()->json([
-        'success' => false,
-        'message' => 'Server Error Occured'
-      ], 500);
+      return $this->error('Server Error Occured', 500);
     }
   }
 
@@ -207,19 +211,15 @@ class JobController extends Controller
       $job = new JobService();
       $jobUpdated = $job->update($jobObject);
       if ($jobUpdated) {
-        return response()->json([
-          'success' => true,
-          'data' => [
-            'jobId' => $jobUpdated->id
-          ],
-          'message' => 'Job Updated',
-        ], 200);
+        $data = [
+          'job' => $jobObject
+        ];
+        return $this->success('Job Updated',$data,200);
       }
+      return $this->error('Job Could not be updated', 400);
+
     } catch (Exception $ex) {
-      return response()->json([
-        'success' => false,
-        'message' => 'Server Error Occured'
-      ], 500);
+      return $this->error('Server Error Occured', 500);
     }
   }
 

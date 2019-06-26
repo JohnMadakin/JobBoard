@@ -61,7 +61,7 @@ class ProfileController extends Controller
         return $this->success('Profile Updated',$userObject,200);
       }
     } catch (Exception $ex) {
-      return $this->success('Server Error Occured',500);
+      return $this->error('Server Error Occured',500);
     }
   }
 }

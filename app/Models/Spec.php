@@ -16,10 +16,17 @@ class Spec extends Model
   protected $guarded = [
     'id',
   ];
+  protected $hidden = [
+    'deleted_at', 'created_at', 'updated_at'
+  ];
 
 
-  function jobs()
+  public function profiles()
   {
     return $this->hasMany('App\Models\Profile');
+  }
+  public function jobs()
+  {
+    return $this->hasMany('App\Models\Job');
   }
 }

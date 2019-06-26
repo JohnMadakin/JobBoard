@@ -42,28 +42,4 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->belongsTo( 'App\Models\Role');
     }
 
-    /**
-     * Checks if User has access to $permissions.
-     */
-    public function hasAccess(array $permissions): bool
-    {
-        var_dump($permissions);
-        foreach ($this->roles as $role) {
-            var_dump($role);
-
-            if ($role->hasAccess($permissions)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Checks if the user belongs to role.
-     */
-    public function inRole(string $role)
-    {
-        return $this->roles()->where('role', $role)->count() == 1;
-    }
-       
 }

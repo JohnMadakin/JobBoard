@@ -21,19 +21,19 @@ class JobService
   {
     return Job::create([
       'title' => $job['title'],
-      'userId' => $job['userId'],
+      'user_id' => $job['userId'],
       'summary' => $job['summary'],
       'description' => $job['description'],
       'responsibilities' => $job[ 'responsibilities'],
       'experience' => $job[ 'experience'],
-      'additionalCompetences' => $job[ 'additionalCompetences'],
+      'additionalCompetences' => $job[ 'additionalCompetencies'],
       'guideline' => $job[ 'guideline'],
       'expiryDate' => $job[ 'expiryDate'],
       'published' => $job['published'],
       'salary' => $job['salary'],
       'location' => $job['location'],
-      'specId' => $job['specId'],
-      'jobTypeId' => $job['jobTypeId'],
+      'spec_id' => $job['specId'],
+      'jobType_id' => $job['jobTypeId'],
 
     ]);
   }
@@ -44,31 +44,64 @@ class JobService
    */
   public function getById($jobId)
   {
-    if(is_int($jobId)) {
-      return Job::with('jobTypes','specs')->where(['id' => $jobId]);
+    if($jobId) {
+      return Job::with('specs', 'jobTypes')->where('id', $jobId)->first();
     }
     return false;
   }
+
+    /**
+   * get job by Id
+   * 
+   */
+  public function getByUserId($userId)
+  {
+    if($userId) {
+      return Job::with('specs', 'jobTypes')->where([
+        'user_id' => $userId,
+        'published' => true
+      ])->get();
+    }
+    return false;
+  }
+
 
   /**
    * get jobs
    * 
    */
-  public function getJobs($page, $pageSize, $search, $sort, $filter)
+  public function getJobs($page, $pageSize, $search, $sortBy, $filter)
   {
-    // $jobs = DB::table('jobs')->select('items.id as itemId', 'title', 'isbn', 'numberInStock as totalNumber', 'itemTypes.name as itemType', 'categories.name as itemCategory', 'itemStocks.itemUniqueCode as itemCode', 'authors.name as author', 'items.created_at as dateAdded')
-    //   ->join('jobTypes', 'items.id', '=', 'itemStocks.itemId')
-    //   ->join('specs', 'items.itemTypeId', '=', 'itemTypes.id')
-    //   ->when($search, function ($query, $search) {
-    //     return $query->where('title', 'ilike', '%' . $search . '%')
-    //       ->orWhere('authors.name', 'ilike', '%' . $search . '%')
-    //       ->orWhere('isbn', 'ilike', '%' . $search . '%');
-    //   })->when($sortBy, function ($query, $sortBy) {
-    //     return $query->orderBy($sortBy['column'], $sortBy['order']);
-    //   }, function ($query) {
-    //     return $query->orderBy('name');
-    //   })->paginate($pageSize, ['*'], 'page', $page);
-    $jobs = Job::with('jobTypes', 'specs')->simplePaginate($pageSize);
+    $published = true;
+    $loc = $filter['location'];
+    $spec = $filter['spec'];
+    $jobType = $filter['jobType'];
+    return DB::table('jobs')->select('jobs.*', 'specs.name as specialization', 'jobTypes.name as jobType')
+      ->join('jobTypes', 'jobs.jobType_id', '=', 'jobTypes.id')
+      ->join('specs', 'jobs.spec_id', '=', 'specs.id')
+      ->when($filter['location'], function($query, $loc) {
+        return $query->where('location', '=', ucwords($loc));
+      })
+      ->when($filter['spec'], function($query, $spec) {
+        return $query->where('specs.name', '=', ucwords($spec));
+      })
+      ->when($filter['jobType'], function($query, $jobType) {
+        return $query->where('jobTypes.name', '=', ucwords($jobType));
+      })
+      ->when($published, function($query, $published){
+        return $query->where('jobs.deleted_at', '=', NULL)
+        ->where('published', $published);
+      })
+      ->when($search, function ($query, $search) {
+        return $query->where('title', 'ilike', '%' . $search . '%')
+          ->orWhere('additionalCompetences', 'ilike', '%' . $search . '%')
+          ->orWhere('summary', 'ilike', '%' . $search . '%');
+      })->when($sortBy, function ($query, $sortBy) {
+        return $query->orderBy($sortBy['column'], $sortBy['order']);
+      }, function ($query) {
+        return $query->orderBy('title');
+      })
+      ->paginate($pageSize, ['*'], 'page', $page);
   }
 
 
@@ -79,7 +112,7 @@ class JobService
    */
   public function delete($jobId)
   {
-    if (is_int($jobId)) {
+    if ($jobId) {
       return Job::find($jobId)->delete();
     }
     return false;
@@ -95,20 +128,21 @@ class JobService
    */
   public function update($job)
   {
-    return Job::updateOrCreate(['id' => $job['jobId']],[
+    // var_dump($job['jobId']);
+    return Job::find($job['jobId'])->update([
       'title' => $job['title'],
       'summary' => $job['summary'],
       'description' => $job['description'],
       'responsibilities' => $job['responsibilities'],
       'experience' => $job['experience'],
-      'additionalCompetences' => $job['additionalCompetences'],
+      'additionalCompetences' => $job['additionalCompetencies'],
       'guideline' => $job['guideline'],
       'published' => $job['published'],
       'expiryDate' => $job['expiryDate'],
       'salary' => $job['salary'],
       'location' => $job['location'],
-      'specId' => $job['specId'],
-      'jobTypeId' => $job['jobTypeId'],
+      'spec_id' => $job['specId'],
+      'jobType_id' => $job['jobTypeId'],
 
     ]);
   }

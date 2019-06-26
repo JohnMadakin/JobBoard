@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Job extends Model
 {
 
   use SoftDeletes;
+
   /**
    * The attributes that are guarded.
    *
@@ -16,28 +18,27 @@ class Job extends Model
   protected $guarded = [
     'id',
   ];
+  protected $hidden = [
+    'deleted_at',
+  ];
 
-  function owner()
+  public function specs()
+  {
+    return $this->belongsTo('App\Models\Spec', 'spec_id', 'id');
+  }
+
+  public function owner()
   {
     return $this->belongsTo('App\Models\User');
   }
-  function jobTypes()
+  public function jobTypes()
   {
-    return $this->belongsTo('App\Models\JobType');
+    return $this->belongsTo('App\Models\JobType', 'jobType_id', 'id');
   }
 
-  function applicants()
+  public function applicants()
   {
     return $this->hasMany('App\Models\Applicant');
   }
-
-  public function publishJob($query)
-  {
-    return $query->where('published', true);
-  }
-
-  public function unpublishJob($query)
-  {
-    return $query->where('published', false);
-  }
+  
 }
