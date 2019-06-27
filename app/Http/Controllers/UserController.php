@@ -118,9 +118,25 @@ class UserController extends Controller
   {
     if($roleId == 1) return 'apply-jobs';
     if($roleId == 2) return 'create-jobs update-jobs';
-    if($roleId == 3) return 'create-jobs update-jobs';
+    if($roleId == 3) return 'create-jobs update-jobs admin-privileges';
     return '';
   }
 
+  /**
+   * Get all users
+   * 
+   * @param  
+   * @return mixed
+   */
+  public function getUsers()
+  {
+    $users = new UserService();
+    $result = $users->get();
+    if (count($result) > 0) {
+      return $this->success('users found',$result,200);
+    }
+
+    return $this->error('No users available', 404);
+  }
 
 }

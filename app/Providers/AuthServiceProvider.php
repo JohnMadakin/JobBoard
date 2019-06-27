@@ -78,6 +78,7 @@ class AuthServiceProvider extends ServiceProvider
             'create-jobs' => 'Create Jobs',
             'update-jobs' => 'Update Jobs',
             'apply-jobs' => 'Apply for Jobs',
+            'admin-privileges' => 'Admin Privileges'
         ]);
     }
 }

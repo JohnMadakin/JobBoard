@@ -54,6 +54,11 @@ class SpecsTableSeeder extends Seeder
                 'updated_at' => $now,
                 'created_at' => $now,
             ],
+            [
+                'name' => 'Marketing',
+                'updated_at' => $now,
+                'created_at' => $now,
+            ]
 
         ]);
     }

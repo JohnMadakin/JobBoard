@@ -18,7 +18,8 @@ class DatabaseSeeder extends Seeder
             UsersTableSeeder::class,
             ProfileTableSeeder::class,
             JobTypeTableSeeder::class,
-            SpecsTableSeeder::class
+            SpecsTableSeeder::class,
+            JobTableSeeder::class
         ]);
     }
 }

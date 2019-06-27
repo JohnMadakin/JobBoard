@@ -26,7 +26,7 @@ class JobService
       'description' => $job['description'],
       'responsibilities' => $job[ 'responsibilities'],
       'experience' => $job[ 'experience'],
-      'additionalCompetences' => $job[ 'additionalCompetencies'],
+      'additionalCompetencies' => $job[ 'additionalCompetencies'],
       'guideline' => $job[ 'guideline'],
       'expiryDate' => $job[ 'expiryDate'],
       'published' => $job['published'],
@@ -128,14 +128,13 @@ class JobService
    */
   public function update($job)
   {
-    // var_dump($job['jobId']);
     return Job::find($job['jobId'])->update([
       'title' => $job['title'],
       'summary' => $job['summary'],
       'description' => $job['description'],
       'responsibilities' => $job['responsibilities'],
       'experience' => $job['experience'],
-      'additionalCompetences' => $job['additionalCompetencies'],
+      'additionalCompetencies' => $job['additionalCompetencies'],
       'guideline' => $job['guideline'],
       'published' => $job['published'],
       'expiryDate' => $job['expiryDate'],

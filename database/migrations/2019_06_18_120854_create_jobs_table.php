@@ -22,7 +22,7 @@ class CreateJobsTable extends Migration
             $table->text('description');
             $table->text('responsibilities');
             $table->text('experience');
-            $table->text('additionalCompetences')->nullable();
+            $table->text('additionalCompetencies')->nullable();
             $table->text('guideline');
             $table->string('salary')->default('No Details Yet');
             $table->date('expiryDate');

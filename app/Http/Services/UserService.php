@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 class UserService
 {
   /**
-   * Get a user from the DB using userName or email as optional parameters.
+   * Get a user from the DB using  email as optional parameters.
    * 
    * @param  userName $userName
    * @param email $email
@@ -22,7 +22,18 @@ class UserService
     return User::with('profiles')->where('email', $email)->first();
   }
 
-
+  /**
+   * Get a user from the DB using userName or email as optional parameters.
+   * 
+   * @param  userName $userName
+   * @param email $email
+   * @param password $passwword
+   * @return mixed
+   */
+  public function get()
+  {
+    return User::with('profiles', 'roles')->get();
+  }
 
   // /**
   //  * find user by id
