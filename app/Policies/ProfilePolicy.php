@@ -10,10 +10,6 @@ class ProfilePolicy
 
   public function update(Request $request)
   {
-    // var_dump('i was here2');
-    // var_dump( $user->id);
-    var_dump( $request->id == $request->user()->profiles->id);
-
     return $request->id == $request->user()->profiles->id;
   }
 }

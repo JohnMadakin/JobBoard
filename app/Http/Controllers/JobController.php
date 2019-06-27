@@ -197,7 +197,6 @@ class JobController extends Controller
 
   public function updateJobs()
   {
-    
     $jobId = $this->request->id;
     $jobObject = $this->validateJobs();
     $jobObject['jobId'] = $jobId;

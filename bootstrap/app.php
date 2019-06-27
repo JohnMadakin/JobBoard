@@ -69,6 +69,7 @@ $app->bind(\Illuminate\Contracts\Routing\UrlGenerator::class, function ($app) {
 $app->routeMiddleware([
     'client' => App\Http\Middleware\UsersAuthorizations::class,
     'canUpdateProfile' => App\Http\Middleware\Authorization::class,
+    'update-jobs' => App\Http\Middleware\UpdateAuthorization::class,
     'scopes' => App\Http\Middleware\CheckUserScope::class,
     'scope' => \Laravel\Passport\Http\Middleware\CheckForAnyScope::class,
 ]);
