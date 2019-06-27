@@ -59,7 +59,13 @@ $router->group(
         $router->post('jobs', [
             'uses' => 'JobController@createJobs'
         ]);
+    }
+);
 
+
+$router->group(
+    ['prefix' => $api, 'middleware' => ['client', 'scopes:create-jobs', 'update-jobs']],
+    function () use ($router) {
         $router->put('jobs/{id}', [
             'uses' => 'JobController@updateJobs'
         ]);

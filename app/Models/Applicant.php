@@ -15,24 +15,17 @@ class Applicant extends Model
   protected $guarded = [
     'id',
   ];
-
-  public function owner()
+  protected $hidden = [
+    'deleted_at', 'updated_at'
+  ];
+  public function user()
   {
-    return $this->belongsTo('App\Models\User');
+    return $this->belongsTo('App\Models\User', 'applicant_id', 'id');
   }
 
   public function job()
   {
-    return $this->belongTo('App\Models\Job');
+    return $this->belongsTo('App\Models\Job', 'user_id', 'id');
   }
 
-  public function publishJob($query)
-  {
-    return $query->where('published', true);
-  }
-
-  public function unpublishJob($query)
-  {
-    return $query->where('published', false);
-  }
 }

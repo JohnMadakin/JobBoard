@@ -65,6 +65,15 @@ class JobService
     return false;
   }
 
+  /**
+   * return job model
+   * 
+   */
+  public function getJobModel($jobId)
+  {
+    return Job::find($jobId);;
+  }
+
 
   /**
    * get jobs
