@@ -103,22 +103,17 @@ class JobController extends Controller
       'spec' => $spec,
       'jobType' => $jobType,
     );
-    // $allowedFilterFields = ['location', 'spec', 'jobType'];
     $allowedSortFields = ['title','location'];
     $allowedOrder = ['asc', 'desc']; 
 
     $sort = ControllerHelpers::deserializeSort($sortBy, $allowedSortFields, $allowedOrder);
 
     if (!$sort) {
-      return response()->json([
-        'success' => false,
-        'message' => 'Please enter a valid sort params'
-      ], 400);
+      return $this->error('Please enter a valid sort params', 400);
     }
 
     $jobs = new JobService();
     try {
-      // $result = 
       $result = $jobs->getJobs($page, $pageSize, $search, $sort, $filter);
       if ($result) {
         return $this->success('Job(s) found',$result,200);
@@ -176,7 +171,6 @@ class JobController extends Controller
 
   public function createJobs()
   {
-    
     $userId = $this->request->user()->id;
     $jobObject = $this->validateJobs();
     $jobObject['userId'] = $userId;

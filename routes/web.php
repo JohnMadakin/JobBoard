@@ -34,6 +34,14 @@ $router->get($api . 'employers/{id}/jobs', [
     'uses' => 'JobController@getJobsByEmployerId'
 ]);
 
+$router->group(
+    ['prefix' => $api, 'middleware' => ['client', 'scopes:admin-privileges']],
+    function () use ($router) {
+        $router->get('users', [
+            'uses' => 'UserController@getUsers'
+        ]);
+    }
+);
 
 
 $router->group(
@@ -60,6 +68,17 @@ $router->group(
             'uses' => 'JobController@deleteJob'
         ]);
 
+        $router->get('jobs/{id}/applicants', [
+            'uses' => 'ApplicantController@getApplicants'
+        ]);
     }
 );
 
+$router->group(
+    ['prefix' => $api, 'middleware' => ['client', 'scopes:apply-jobs']],
+    function () use ($router) {
+        $router->post('jobs/{id}/apply', [
+            'uses' => 'ApplicantController@applyForJob'
+        ]);
+    }
+);
