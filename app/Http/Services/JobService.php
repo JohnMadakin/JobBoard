@@ -103,7 +103,7 @@ class JobService
       })
       ->when($search, function ($query, $search) {
         return $query->where('title', 'ilike', '%' . $search . '%')
-          ->orWhere('additionalCompetences', 'ilike', '%' . $search . '%')
+          ->orWhere('additionalCompetencies', 'ilike', '%' . $search . '%')
           ->orWhere('summary', 'ilike', '%' . $search . '%');
       })->when($sortBy, function ($query, $sortBy) {
         return $query->orderBy($sortBy['column'], $sortBy['order']);

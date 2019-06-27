@@ -10,10 +10,6 @@ class ProfileService
 {
   /**
    * update user profile
-   * 
-   * @param  userName $userName
-   * @param email $email
-   * @param password $passwword
    * @return mixed
    */
   public function update($user)
